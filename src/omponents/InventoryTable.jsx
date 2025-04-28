@@ -56,10 +56,10 @@ const InventoryTable = () => {
   // Image mapping based on section
   const getImageForIndex = (fileIndex, rowIndex) => {
     const imageRanges = [
-      { start: 1, end: 22 }, // Bags (now includes image copy 21.png)
-      { start: 23, end: 43 }, // Stationery (starts from image copy 22.png)
+      { start: 1, end: 22 }, // Bags
+      { start: 23, end: 43 }, // Stationery
       { start: 44, end: 64 }, // Toys
-      { start: 65, end: 99 }, // Kitchen
+      { start: 65, end: 98 }, // Kitchen
     ];
     const { start, end } = imageRanges[fileIndex];
     const imageIndex = start + rowIndex;
@@ -220,30 +220,27 @@ const InventoryTable = () => {
 
   return (
     <div className="inventory-container">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Warehouse Inventory</h1>
+      <h1 className="display-4 font-weight-bold mb-4">Warehouse Inventory</h1>
 
-      <div className="mb-6 position-relative"> 
-
+      <div className="mb-4 position-relative">
         <Form.Control
           type="text"
           className="form-control-lg modern-search"
-          
           placeholder="🔍 Search by description..."
           value={searchTerm}
           onChange={handleSearch}
-          aria-label="Search inventory" 
+          aria-label="Search inventory"
         />
-       
       </div>
 
       <div className="table-wrapper">
-        <table className="table table-hover">
-          <thead>
+        <table className="table table-hover table-bordered">
+          <thead className="thead-dark">
             <tr>
               {headers.map((header, index) => (
                 <th
                   key={index}
-                  className={`fw-bold ${header === 'SALE' ? 'text-danger' : ''}`}
+                  className={`font-weight-bold ${header === 'SALE' ? 'text-danger' : ''}`}
                 >
                   {header}
                 </th>
@@ -256,7 +253,7 @@ const InventoryTable = () => {
                 {headers.map((header, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`fw-bold ${header === 'SALE' ? 'text-danger' : ''}`}
+                    className={`font-weight-bold ${header === 'SALE' ? 'text-danger' : ''}`}
                   >
                     {header === 'IMAGE' ? (
                       <img
@@ -300,7 +297,7 @@ const InventoryTable = () => {
         </table>
       </div>
 
-      <nav aria-label="Page navigation" className="mt-6">
+      <nav aria-label="Page navigation" className="mt-4">
         <ul className="pagination justify-content-center">
           {data.map((_, index) => (
             <li key={index} className={`page-item ${currentPage === index ? 'active' : ''}`}>
