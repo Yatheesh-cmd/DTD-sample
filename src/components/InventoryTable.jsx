@@ -10,8 +10,11 @@ const InventoryTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editRow, setEditRow] = useState(null);
   const [viewRow, setViewRow] = useState(null);
+  const [deleteRow, setDeleteRow] = useState(null);
   const [formData, setFormData] = useState({});
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState('');
 
   const sections = ['Bags', 'Stationery', 'Toys', 'Kitchen'];
@@ -22,7 +25,7 @@ const InventoryTable = () => {
     '/DTD SAMPLE FILE3.csv',
   ];
 
-  // Editable fields for the edit modal
+  // Updated editable fields for the edit and add modals
   const editableFields = [
     { key: 'DESCRIPTION', label: 'Description', type: 'text' },
     { key: 'ITEM NO.', label: 'Item Number', type: 'text' },
@@ -31,9 +34,17 @@ const InventoryTable = () => {
     { key: 'SALE', label: 'Sale Price', type: 'number', step: '0.01' },
     { key: 'PACKING', label: 'Packing', type: 'text' },
     { key: 'T-PCS', label: 'Total Pieces', type: 'number' },
+    { key: 'WAREHOSE STOCK', label: 'Warehouse Stock', type: 'number' },
+    { key: 'ABUDHABI', label: 'Abu Dhabi Stock', type: 'number' },
+    { key: 'AJMAN', label: 'Ajman Stock', type: 'number' },
+    { key: 'AVENUE', label: 'Avenue Stock', type: 'number' },
+    { key: 'AL SAFA', label: 'Al Safa Stock', type: 'number' },
+    { key: 'BANIYAS', label: 'Baniyas Stock', type: 'number' },
+    { key: 'FAHIDI', label: 'Fahidi Stock', type: 'number' },
+    { key: 'SHARJAH', label: 'Sharjah Stock', type: 'number' },
   ];
 
-  // Fields to display in the view modal
+  // Fields to display in the view modal (already includes the stock fields)
   const viewFields = [
     { key: 'DESCRIPTION', label: 'Description' },
     { key: 'ITEM NO.', label: 'Item Number' },
@@ -138,6 +149,98 @@ const InventoryTable = () => {
     setViewRow(row);
   };
 
+  const handleDeleteClick = (row, rowIndex) => {
+    setDeleteRow({ row, sectionIndex: currentPage, rowIndex });
+    setShowDeleteModal(true);
+  };
+
+  const handleAddClick = () => {
+    setFormData({ sectionIndex: currentPage.toString() });
+    setShowAddModal(true);
+  };
+
+  const handleAddConfirm = (e) => {
+    e.preventDefault();
+
+    const sectionIndex = parseInt(formData.sectionIndex, 10);
+    const newItem = { ...formData };
+
+    // Validate numeric fields
+    editableFields.forEach((field) => {
+      if (field.type === 'number' && newItem[field.key]) {
+        const value = parseFloat(newItem[field.key]);
+        newItem[field.key] = isNaN(value) ? '' : value.toString();
+      }
+    });
+
+    // Add the new item to the selected section
+    setData((prevData) => {
+      const newData = [...prevData];
+      const sectionData = newData[sectionIndex] || [];
+      const newRowIndex = sectionData.length;
+      newItem.IMAGE = getImageForIndex(sectionIndex, newRowIndex);
+      newItem.COUNT = newRowIndex + 1;
+      newData[sectionIndex] = [...sectionData, newItem];
+      return newData;
+    });
+
+    // Update filteredData if the current section is the one being added to
+    if (sectionIndex === currentPage) {
+      setFilteredData((prevFiltered) => {
+        const newFiltered = [...prevFiltered, {
+          ...newItem,
+          IMAGE: getImageForIndex(sectionIndex, prevFiltered.length),
+          COUNT: prevFiltered.length + 1,
+        }];
+        return newFiltered;
+      });
+    }
+
+    // Close the modal
+    setShowAddModal(false);
+    setFormData({});
+  };
+
+  const handleAddModalClose = () => {
+    setShowAddModal(false);
+    setFormData({});
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!deleteRow) return;
+
+    const { sectionIndex, rowIndex } = deleteRow;
+
+    // Update data state by removing the item
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[sectionIndex] = newData[sectionIndex].filter((_, idx) => idx !== rowIndex);
+      newData[sectionIndex] = newData[sectionIndex].map((item, idx) => ({
+        ...item,
+        COUNT: idx + 1,
+      }));
+      return newData;
+    });
+
+    // Update filteredData state by removing the item
+    setFilteredData((prevFiltered) => {
+      const newFiltered = prevFiltered.filter((_, idx) => idx !== rowIndex);
+      return newFiltered.map((item, idx) => ({
+        ...item,
+        COUNT: idx + 1,
+      }));
+    });
+
+    // Close the modal
+    setShowDeleteModal(false);
+    setDeleteRow(null);
+  };
+
+  const handleDeleteModalClose = () => {
+    setShowDeleteModal(false);
+    setDeleteRow(null);
+  };
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -220,9 +323,9 @@ const InventoryTable = () => {
 
   return (
     <div className="inventory-container">
-      <h1 className="display-4 font-weight-bold mb-4">Warehouse Inventory</h1>
+      <h1 className="font-weight-bold mb-4 shadow">Warehouse Inventory📦</h1>
 
-      <div className="mb-4 position-relative">
+      <div className="mb-4 position-relative d-flex align-items-center gap-3">
         <Form.Control
           type="text"
           className="form-control-lg modern-search"
@@ -231,6 +334,13 @@ const InventoryTable = () => {
           onChange={handleSearch}
           aria-label="Search inventory"
         />
+        <Button
+          variant="outline-success"
+          onClick={handleAddClick}
+          aria-label="Add new item"
+        >
+          Add Item
+        </Button>
       </div>
 
       <div className="table-wrapper">
@@ -285,6 +395,15 @@ const InventoryTable = () => {
                         >
                           View
                         </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          className="delete-btn"
+                          onClick={() => handleDeleteClick(row, rowIndex)}
+                          aria-label={`Delete item ${row.DESCRIPTION || 'unknown'}`}
+                        >
+                          Delete
+                        </Button>
                       </div>
                     ) : (
                       row[header] || ''
@@ -326,6 +445,65 @@ const InventoryTable = () => {
         </Modal.Header>
         <Modal.Body className="text-center">
           <img src={modalImageSrc} alt="Item Image" className="img-fluid" />
+        </Modal.Body>
+      </Modal>
+
+      {/* Add Modal */}
+      <Modal
+        show={showAddModal}
+        onHide={handleAddModalClose}
+        size="lg"
+        aria-labelledby="addModalLabel"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="addModalLabel">Add New Item</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleAddConfirm}>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <Form.Group controlId="sectionIndex">
+                  <Form.Label>Section</Form.Label>
+                  <Form.Select
+                    name="sectionIndex"
+                    value={formData.sectionIndex || ''}
+                    onChange={handleFormChange}
+                    required
+                  >
+                    {sections.map((section, index) => (
+                      <option key={index} value={index}>
+                        {section}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </div>
+              {editableFields.map((field) => (
+                <div className="col-md-6 mb-3" key={field.key}>
+                  <Form.Group controlId={field.key}>
+                    <Form.Label>{field.label}</Form.Label>
+                    <Form.Control
+                      type={field.type}
+                      name={field.key}
+                      value={formData[field.key] || ''}
+                      onChange={handleFormChange}
+                      placeholder={`Enter ${field.label}`}
+                      step={field.step}
+                      required={field.type === 'text'}
+                    />
+                  </Form.Group>
+                </div>
+              ))}
+            </div>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleAddModalClose}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="success">
+                Add Item
+              </Button>
+            </Modal.Footer>
+          </Form>
         </Modal.Body>
       </Modal>
 
@@ -408,6 +586,34 @@ const InventoryTable = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleViewModalClose}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        show={showDeleteModal}
+        onHide={handleDeleteModalClose}
+        centered
+        aria-labelledby="deleteModalLabel"
+      >
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title id="deleteModalLabel">Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {deleteRow && (
+            <p>
+              Are you sure you want to delete <strong>{deleteRow.row.DESCRIPTION || 'this item'}</strong>?
+              This action cannot be undone.
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteModalClose}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
