@@ -335,7 +335,7 @@ const InventoryTable = () => {
           aria-label="Search inventory"
         />
         <Button
-          variant="outline-success"
+          variant="outline-info"
           onClick={handleAddClick}
           aria-label="Add new item"
         >

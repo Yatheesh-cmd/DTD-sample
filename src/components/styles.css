@@ -1,6 +1,6 @@
 
 .inventory-container {
-  background: linear-gradient(to right, #ffffff, #ffdd00,rgb(255, 0, 0)); /* Soft gradient */
+  background: linear-gradient(to right, #ffffff, #ffee83,rgb(255, 0, 0)); /* Soft gradient */
   min-height: 100vh;
   padding: 2rem;
   color: #212529; /* Dark grey for general text */
@@ -48,7 +48,7 @@ h1 {
 }
 
 .table .text-danger {
-  color: #dc3545 !important;
+  color: #390c10 !important;
 }
 
 .table .fw-bold {
@@ -270,128 +270,4 @@ gap: 10px;
 
 .detail-item {
 padding: 5px 0;
-}
-
-/* Updated styles for Login page */
-.login-container {
-background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-            url('https://fixitdesign.ae/wp-content/uploads/2025/01/Your-Nearest-Day-to-Day-Dubai-Hypermarket-2.jpg') center center / cover no-repeat;
-min-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-animation: fadeIn 2s ease-in-out forwards;
-}
-
-.login-box {
-width: 100%;
-max-width: 400px;
-background: rgba(255, 255, 255, 0.95);
-border-radius: 15px;
-box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-animation: slideIn 1s ease-out forwards;
-}
-
-.login-box:hover {
-transform: translateY(-5px);
-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Style for the logo image */
-.login-logo {
-max-width: 200px;
-height: auto;
-margin-bottom: 1.5rem;
-}
-
-.login-title {
-font-size: 1.8rem;
-font-weight: 700;
-color: #2c3e50;
-margin-bottom: 0.5rem;
-}
-
-.login-subtitle {
-font-size: 1rem;
-color: #7f8c8d;
-margin-bottom: 1.5rem;
-}
-
-.modern-label {
-font-weight: 600;
-color: #34495e;
-}
-
-.modern-input {
-border-radius: 8px;
-border: 1px solid #dfe6e9;
-padding: 10px;
-transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modern-input:focus {
-border-color: #007bff;
-box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-outline: none;
-}
-
-.modern-button {
-border-radius: 8px;
-padding: 12px;
-font-weight: 600;
-background: linear-gradient(90deg, #007bff, #00c4b4);
-border: none;
-transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.modern-button:hover {
-background: linear-gradient(90deg, #00c4b4, #007bff);
-transform: translateY(-2px);
-}
-
-.modern-alert {
-border-radius: 8px;
-padding: 10px;
-font-size: 0.9rem;
-}
-
-/* Animations */
-@keyframes fadeIn {
-0% {
-  opacity: 0;
-}
-100% {
-  opacity: 1;
-}
-}
-
-@keyframes slideIn {
-0% {
-  opacity: 0;
-  transform: translateY(20px);
-}
-100% {
-  opacity: 1;
-  transform: translateY(0);
-}
-}
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-.login-box {
-  width: 90%;
-  padding: 1.5rem;
-}
-
-.login-title {
-  font-size: 1.5rem;
-}
-
-.login-subtitle {
-  font-size: 0.9rem;
-}
-
-.login-logo {
-  max-width: 150px;
-}
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import './styles.css'; // Ensure CSS is imported
+import './login.css'; // Ensure CSS is imported
 
 const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
