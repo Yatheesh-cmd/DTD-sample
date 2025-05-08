@@ -323,7 +323,7 @@ const InventoryTable = () => {
 
   return (
     <div className="inventory-container">
-      <h1 className="font-weight-bold mb-4 shadow">Warehouse Inventory📦</h1>
+      <h1 className="font-weight-bold mb-4 shadow ">Warehouse Inventory📦</h1>
 
       <div className="mb-4 position-relative d-flex align-items-center gap-3">
         <Form.Control

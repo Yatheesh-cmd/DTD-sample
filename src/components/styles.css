@@ -1,6 +1,6 @@
 
 .inventory-container {
-  background: linear-gradient(to right, #ffffff, #ffee83,rgb(255, 0, 0)); /* Soft gradient */
+  background: linear-gradient(to right, #ffffff, #ffd0d0,rgb(255, 234, 99),rgb(249, 80, 159)); /* Soft gradient */
   min-height: 100vh;
   padding: 2rem;
   color: #212529; /* Dark grey for general text */
@@ -8,11 +8,8 @@
 h1 {
   font-size: 1.6rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #ff5454, #ff1919); /* Blue to Purple */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+ 
+ 
 }
 
 
